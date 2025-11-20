@@ -1,6 +1,5 @@
 # Capstone Learning Insight Backend
 
-Backend service for the Learning Insight application. This service collects user learning activity, processes it using an AI model (TensorFlow integration), and provides personalized learning insights and recommendations via RESTful APIs.
 
 ## 🚀 Tech Stack
 
