@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "migrate": "node-pg-migrate",
+    "start": "nodemon ./src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,9 +24,11 @@
     "@hapi/hapi": "^21.4.4",
     "@hapi/jwt": "^3.2.1",
     "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
     "joi": "^18.0.2",
     "nanoid": "^5.1.6",
     "node-pg-migrate": "^8.0.3",
+    "nodemon": "^3.1.11",
     "pg": "^8.16.3"
   }
 }
