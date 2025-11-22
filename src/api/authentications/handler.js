@@ -11,26 +11,31 @@ class AuthenticationsHandler {
     }
 
     async postAuthenticationHandler(request, h) {
-        this._validator.validatePostAuthenticationPayload(request.payload);
-        const { username, password } = request.payload;
+        try {
+            this._validator.validatePostAuthenticationPayload(request.payload);
+            const { email, password } = request.payload;
 
-        const id = await this._usersService.verifyUserCredential(username, password);
+            const id = await this._usersService.verifyUserCredential(email, password);
 
-        const accessToken = this._tokenManager.generateAccessToken({ id });
-        const refreshToken = this._tokenManager.generateRefreshToken({ id });
+            const accessToken = this._tokenManager.generateAccessToken({ id });
+            const refreshToken = this._tokenManager.generateRefreshToken({ id });
 
-        await this._authenticationsService.addRefreshToken(refreshToken);
+            await this._authenticationsService.addRefreshToken(refreshToken);
 
-        const response = h.response({
-            status: 'success',
-            messasge: 'Authentication berhasil ditambahkan',
-            data: {
-                accessToken, refreshToken
-            }
-        })
+            const response = h.response({
+                status: 'success',
+                messasge: 'Authentication berhasil ditambahkan',
+                data: {
+                    accessToken, refreshToken
+                }
+            })
 
-        response.code(201)
-        return response;
+            response.code(201)
+            return response;
+        } catch (err) {
+            console.log('error cuy: ', err);
+            throw err;
+        }
     }
 
     async putAuthenticationHandler(request, h) {
