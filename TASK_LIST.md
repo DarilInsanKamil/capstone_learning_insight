@@ -1,12 +1,10 @@
 # 📋 Task List - Capstone Learning Insight Backend
 
-Project ini dikerjakan oleh 2 orang. Pembagian tugas dibagi menjadi **Role A (Authentication & Core)** dan **Role B (AI & Insight)** agar pengerjaan bisa berjalan paralel.
-
 ## 🚀 Fase 1: Setup & Konfigurasi Awal (Joint / Bersama)
 * [✔️] **Init Project**: Menjalankan `npm init` dan instalasi dependensi dasar (`@hapi/hapi`, `pg`, `dotenv`).
 * [✔️] **Environment Variables**: Setup file `.env` (Database credentials, JWT Keys, Server Config).
 * [✔️] **Server Setup**: Konfigurasi dasar Hapi server di `src/server.js`.
-* [ ✔️] **Database Schema**: Pastikan koneksi PostgreSQL berjalan dan tabel raw data (`submissions`, `trackings`, `completions`, `users`) sudah tersedia.
+* [✔️] **Database Schema**: Pastikan koneksi PostgreSQL berjalan dan tabel raw data (`submissions`, `trackings`, `completions`, `users`) sudah tersedia.
 
 ---
 
