@@ -14,6 +14,9 @@ const TokenManager = require('./tokenize/TokenManager');
 const inisight = require('./api/inisight');
 const InsightsService = require('./service/InisightsService');
 
+const insight = require('./api/inisight')
+const InsightService = require('./service/InisightsService');
+
 const init = async () => {
     const usersService = new UsersService();
     const authenticationsService = new AuthenticationsService();
