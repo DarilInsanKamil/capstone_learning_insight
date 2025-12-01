@@ -8,8 +8,11 @@ const UserValidator = require('./validator/users');
 
 const authentications = require('./api/authentications')
 const AuthenticationsService = require('./service/AuthenticationsService');
+const AuthenticationsValidator = require('./validator/authentications');
 const TokenManager = require('./tokenize/TokenManager');
-const AuthenticationsValidator = require('./validator/authentications')
+
+const inisight = require('./api/inisight');
+const InsightsService = require('./service/InisightsService');
 
 const insight = require('./api/inisight')
 const InsightService = require('./service/InisightsService');
@@ -17,8 +20,7 @@ const InsightService = require('./service/InisightsService');
 const init = async () => {
     const usersService = new UsersService();
     const authenticationsService = new AuthenticationsService();
-    const insightsService = new InsightService();
-
+    const InisightsService = new InsightsService();
     const server = Hapi.server({
         port: process.env.PORT,
         host: process.env.HOST,
@@ -60,9 +62,10 @@ const init = async () => {
             }
         },
         {
-            plugin: insight,
+            plugin: inisight,
             options: {
-                service: insightsService,
+                service: InisightsService,
+                // validator: UserValidator
             }
         },
         {
