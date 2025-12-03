@@ -24,17 +24,24 @@ class AuthenticationsHandler {
 
             const response = h.response({
                 status: 'success',
-                messasge: 'Authentication berhasil ditambahkan',
+                message: 'Authentication berhasil ditambahkan',
                 data: {
-                    accessToken, refreshToken
+                    accessToken,
+                    refreshToken,
+                    userId: id
                 }
             })
 
             response.code(201)
             return response;
         } catch (err) {
-            console.log('error cuy: ', err);
-            throw err;
+            console.log('Authentication error:', err.message);
+            const response = h.response({
+                status: 'fail',
+                message: err.message || 'Authentication failed'
+            });
+            response.code(400);
+            return response;
         }
     }
 

@@ -1,0 +1,118 @@
+.login-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eef5f3;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body, html, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Wrapper utama */
+.login-box {
+  display: flex;
+  width: 800px;
+  height: 450px;
+  background: white;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.5s ease;
+}
+
+/* Panel kiri - form login */
+.login-form-container {
+  width: 50%;
+  padding: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-form h1 {
+  color: #02254a;
+  margin-bottom: 10px;
+}
+
+.login-form input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: #02254a;
+}
+
+.login-form button {
+  padding: 12px;
+  background: #02254a;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.login-form button:hover {
+  transform: scale(1.05);
+}
+
+.login-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.error {
+  color: red;
+  font-size: 13px;
+  padding: 10px;
+  background-color: #ffe0e0;
+  border-radius: 5px;
+}
+
+/* Panel kanan - welcome */
+.login-info-panel {
+  width: 50%;
+  background: #02254a;
+  color: white;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.login-info-panel h2 {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.login-info-panel p {
+  font-size: 20px;
+}
+
+/* Efek hover geser UI */
+.login-box:hover {
+  transform: scale(1.02);
+}
