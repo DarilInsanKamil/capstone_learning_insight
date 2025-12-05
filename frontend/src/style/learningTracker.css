@@ -1,0 +1,148 @@
+.activity-tracker-container-in-dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+}
+
+.calendar-card-activity {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header-activity {
+  margin-bottom: 20px;
+}
+
+.tracker-title-activity {
+  margin: 0;
+  color: #333;
+}
+
+.calendar-grid-activity {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+
+.week-row {
+  display: contents;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.calendar-day.header-day {
+  background: #f5f5f5;
+  font-weight: bold;
+  cursor: default;
+}
+
+.calendar-day.empty-cell-activity {
+  background: #fafafa;
+  cursor: default;
+}
+
+.calendar-day.has-day-activity {
+  background: #e8f5e9;
+  border-color: #4caf50;
+}
+
+.calendar-day.selected-activity {
+  background: #4caf50;
+  color: white;
+}
+
+.day-number-activity {
+  font-weight: bold;
+}
+
+.daily-checkin-text-activity {
+  font-size: 10px;
+  margin-top: 5px;
+}
+
+.detail-panel-wrapper-activity {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.detail-panel-activity-content {
+  min-height: 300px;
+}
+
+.detail-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.detail-panel-header h4 {
+  margin: 0;
+}
+
+.close-detail-button-x {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+}
+
+.detail-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-label-activity {
+  font-weight: bold;
+  color: #333;
+}
+
+.date-display-activity {
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 5px;
+}
+
+.metrics-display-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.metrics-display-box p {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.metrics-display-box span {
+  font-weight: bold;
+  color: #4caf50;
+}
+
+.detail-placeholder-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #999;
+}
