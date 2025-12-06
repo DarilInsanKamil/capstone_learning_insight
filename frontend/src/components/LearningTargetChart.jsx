@@ -1,12 +1,12 @@
 import React from "react";
 
 export default function LearningTargetChart({ user }) {
-  if (!user || !user.metrics) return null;
+  if (!user) return null;
 
   const chartData = [
-    { name: "Tutorial Completion", value: (user.metrics.tutorial_completion_rate || 0) * 100 },
-    { name: "Submission Success", value: (user.metrics.submission_success_rate || 0) * 100 },
-    { name: "Materials Completed", value: Math.min((user.metrics.total_material_completed || 0) * 10, 100) },
+    { name: "Tutorial Completion", value: (user.tutorial_completion_rate || 0) * 100 },
+    { name: "Submission Success", value: (user.submission_success_rate || 0) * 100 },
+    { name: "Materials Completed", value: Math.min((user.total_material_completed || 0) * 10, 100) },
   ];
 
   return (

@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import LearningTargetChart from "../components/LearningTargetChart";
 import LearningActivityTracker from "./LearningActivityTracker";
 import "../style/dashboard.css";
+import JourneyCard from "../components/JourneyCard";
 
 const MENU_ITEMS = {
   INSIGHT: "Learning Insight",
@@ -17,6 +18,8 @@ export default function Dashboard() {
   const { logout } = useAuth();
   const [user, setUser] = useState(null);
   const [insight, setInsight] = useState(null);
+  const [progress, setProgress] = useState(null);
+  const [journey, setJourney] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [activeMenu, setActiveMenu] = useState(MENU_ITEMS.INSIGHT);
   const [loading, setLoading] = useState(true);
@@ -24,7 +27,33 @@ export default function Dashboard() {
   useEffect(() => {
     fetchUserData();
     fetchInsightData();
+    fetchJourneyData();
+    fetchProggresData();
   }, []);
+
+  const fetchProggresData = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/insight/progress`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        setProgress(data.data);
+      }
+    } catch (err) {
+      console.error("Error fetching progress:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchUserData = async () => {
     try {
@@ -36,12 +65,15 @@ export default function Dashboard() {
         return;
       }
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/users/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await response.json();
       if (response.ok) {
@@ -55,16 +87,45 @@ export default function Dashboard() {
     }
   };
 
+  // const handleGenerateInsight = async () => {
+  //   const token = localStorage.getItem("accessToken");
+
+  //   try {
+  //     setLoading(true);
+  //     const response = await fetch(
+  //       `${import.meta.env.VITE_API_URL}/insight/generate`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+  //     await fetchInsightData();
+  //   } catch (error) {
+  //     alert(
+  //       "Gagal generate insight: " +
+  //         (error.response?.data?.message || error.message)
+  //     );
+  //     setLoading(false);
+  //   }
+  // };
+
   const fetchInsightData = async () => {
     try {
       const token = localStorage.getItem("accessToken");
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/insight/generate`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/insight/generate`,
+        {
+          // method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await response.json();
       if (response.ok) {
@@ -76,6 +137,22 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
+
+  const fetchJourneyData = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/journey`);
+      const data = await response.json()
+      if (response.ok) {
+        setJourney(data.result);
+      }
+    } catch (err) {
+      console.err("err", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
 
   function handlePhotoUpload(e) {
     const file = e.target.files[0];
@@ -102,52 +179,72 @@ export default function Dashboard() {
               <h3 className="section-title">Materials & Progress</h3>
 
               <div className="materials-number">
-                <span className="big-number">{insight.metrics?.total_material_completed || 0}</span>
-                <span className="big-number-label">Total Materials Completed</span>
+                <span className="big-number">
+                  {progress.total_material_completed || 0}
+                </span>
+                <span className="big-number-label">
+                  Total Materials Completed
+                </span>
               </div>
 
               <ul className="materials-list">
                 <li>
                   <span>Materials / day:</span>
-                  <span>{(insight.metrics?.materialsPerDay || 0).toFixed(2)}</span>
+                  <span>{progress.materials_per_day || 0}</span>
                 </li>
                 <li>
                   <span>Avg tutorial duration (jam):</span>
-                  <span>{(insight.metrics?.avg_tutorial_duration || 0).toFixed(2)}</span>
+                  <span>{progress.avg_tutorial_duration || 0}</span>
                 </li>
                 <li>
                   <span>Study time per material:</span>
-                  <span>{(insight.metrics?.study_time_per_material || 0).toFixed(2)}</span>
+                  <span>{progress.study_time_per_material || 0}</span>
                 </li>
                 <li>
                   <span>Tutorial completion:</span>
                   <div className="progress">
                     <div
                       className="progress-bar tutorial"
-                      style={{ width: `${(insight.metrics?.tutorial_completion_rate || 0) * 100}%` }}
+                      style={{
+                        width: `${
+                          (progress.tutorial_completion_rate || 0) * 100
+                        }%`,
+                      }}
                     />
                   </div>
-                  <span>{((insight.metrics?.tutorial_completion_rate || 0) * 100).toFixed(1)}%</span>
+                  <span>
+                    {((progress.tutorial_completion_rate || 0) * 100).toFixed(
+                      1
+                    )}
+                    %
+                  </span>
                 </li>
                 <li>
                   <span>Submission success:</span>
                   <div className="progress">
                     <div
                       className="progress-bar submission"
-                      style={{ width: `${(insight.metrics?.submission_success_rate || 0) * 100}%` }}
+                      style={{
+                        width: `${
+                          (progress.submission_success_rate || 0) * 100
+                        }%`,
+                      }}
                     />
                   </div>
-                  <span>{((insight.metrics?.submission_success_rate || 0) * 100).toFixed(1)}%</span>
+                  <span>
+                    {((progress.submission_success_rate || 0) * 100).toFixed(1)}
+                    %
+                  </span>
                 </li>
                 <li>
                   <span>Avg submission rating:</span>
-                  <span>{insight.metrics?.avg_submission_rating_journey || "N/A"}</span>
+                  <span>{progress.avg_submission_rating || "N/A"}</span>
                 </li>
               </ul>
             </div>
             <div className="card learning-target-card">
               <h3 className="section-title">Learning Target</h3>
-              <LearningTargetChart user={insight} />
+              <LearningTargetChart user={progress} />
             </div>
           </div>
         </>
@@ -166,7 +263,8 @@ export default function Dashboard() {
       return (
         <div className="info-card">
           <h3 className="section-title">🕒 Journey</h3>
-          <p>Konten untuk bagian Journey akan ditampilkan di sini.</p>
+          {/* <p>Konten untuk bagian Journey akan ditampilkan di sini.</p> */}
+          <JourneyCard data={journey} />
         </div>
       );
     }
@@ -181,7 +279,10 @@ export default function Dashboard() {
         <div className="profile-upload-box">
           <label htmlFor="uploadPhoto">
             <img
-              src={profileImage || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+              src={
+                profileImage ||
+                "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+              }
               alt="Profile"
               className="sidebar-photo"
             />
@@ -199,19 +300,25 @@ export default function Dashboard() {
         <div className="sidebar-separator"></div>
         <nav className="menu">
           <div
-            className={`menu-item ${activeMenu === MENU_ITEMS.INSIGHT ? "active-menu" : ""}`}
+            className={`menu-item ${
+              activeMenu === MENU_ITEMS.INSIGHT ? "active-menu" : ""
+            }`}
             onClick={() => setActiveMenu(MENU_ITEMS.INSIGHT)}
           >
             📘 Learning Insight
           </div>
           <div
-            className={`menu-item ${activeMenu === MENU_ITEMS.TRACKER ? "active-menu" : ""}`}
+            className={`menu-item ${
+              activeMenu === MENU_ITEMS.TRACKER ? "active-menu" : ""
+            }`}
             onClick={() => setActiveMenu(MENU_ITEMS.TRACKER)}
           >
             🗓 Learning Tracker
           </div>
           <div
-            className={`menu-item ${activeMenu === MENU_ITEMS.JOURNEY ? "active-menu" : ""}`}
+            className={`menu-item ${
+              activeMenu === MENU_ITEMS.JOURNEY ? "active-menu" : ""
+            }`}
             onClick={() => setActiveMenu(MENU_ITEMS.JOURNEY)}
           >
             🕒 Journey

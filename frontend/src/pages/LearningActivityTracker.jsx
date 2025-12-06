@@ -33,7 +33,10 @@ const LearningActivityTracker = () => {
         const formattedData = {};
         data.data.forEach((activity) => {
           const date = new Date(activity.date);
-          if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+          if (
+            date.getMonth() === currentMonth &&
+            date.getFullYear() === currentYear
+          ) {
             const day = date.getDate();
             formattedData[day] = {
               materials: activity.materials || 0,
@@ -53,7 +56,10 @@ const LearningActivityTracker = () => {
     }
   };
 
-  const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
+
+
+  const getDaysInMonth = (month, year) =>
+    new Date(year, month + 1, 0).getDate();
   const daysInMonth = getDaysInMonth(currentMonth, currentYear);
 
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
@@ -111,7 +117,11 @@ const LearningActivityTracker = () => {
                     onClick={() => handleDayClick(day)}
                   >
                     {day && <div className="day-number-activity">{day}</div>}
-                    {day && <div className="daily-checkin-text-activity">Activity Tracker</div>}
+                    {day && (
+                      <div className="daily-checkin-text-activity">
+                        Activity Tracker
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -124,7 +134,10 @@ const LearningActivityTracker = () => {
         <div className="detail-panel-activity-content">
           <div className="detail-panel-header">
             <h4>Activity Tracker Detail</h4>
-            <button className="close-detail-button-x" onClick={() => setSelectedDate(null)}>
+            <button
+              className="close-detail-button-x"
+              onClick={() => setSelectedDate(null)}
+            >
               &times;
             </button>
           </div>
@@ -133,7 +146,11 @@ const LearningActivityTracker = () => {
             <div className="detail-form-section">
               <label className="form-label-activity">Selected Date</label>
               <div className="date-display-activity">
-                {new Date(currentYear, currentMonth, selectedDate).toLocaleDateString("en-US", {
+                {new Date(
+                  currentYear,
+                  currentMonth,
+                  selectedDate
+                ).toLocaleDateString("en-US", {
                   weekday: "long",
                   month: "short",
                   day: "2-digit",
@@ -150,13 +167,16 @@ const LearningActivityTracker = () => {
                   Study Time: <span>{selectedActivity.studyTime} jam</span>
                 </p>
                 <p>
-                  Tutorial Completion: <span>{selectedActivity.tutorialCompletion}%</span>
+                  Tutorial Completion:{" "}
+                  <span>{selectedActivity.tutorialCompletion}%</span>
                 </p>
                 <p>
-                  Submission Rating: <span>{selectedActivity.submissionRating} / 5</span>
+                  Submission Rating:{" "}
+                  <span>{selectedActivity.submissionRating} / 5</span>
                 </p>
                 <p>
-                  Submission Success: <span>{selectedActivity.submissionSuccess}%</span>
+                  Submission Success:{" "}
+                  <span>{selectedActivity.submissionSuccess}%</span>
                 </p>
               </div>
             </div>

@@ -19,11 +19,13 @@ export default function Login() {
       });
       const data = await res.json();
       const token = data?.data?.accessToken;
+      const refreshToken = data?.data?.refreshToken;
       const userId = data?.data?.userId;
 
       if (!token) throw new Error("Token not received");
 
       localStorage.setItem("accessToken", token);
+      localStorage.setItem("refreshToken", refreshToken);
       if (userId) localStorage.setItem("userId", userId);
 
       login(token);

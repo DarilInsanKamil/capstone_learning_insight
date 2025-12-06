@@ -14,13 +14,19 @@ const TokenManager = require('./tokenize/TokenManager');
 const inisight = require('./api/inisight');
 const InsightsService = require('./service/InisightsService');
 
-const insight = require('./api/inisight')
-const InsightService = require('./service/InisightsService');
+const progress = require('./api/progress');
+const ProgressService = require('./service/ProgressService');
+
+const journey = require('./api/journey');
+const JourneyService = require('./service/JourneyService');
+
 
 const init = async () => {
     const usersService = new UsersService();
     const authenticationsService = new AuthenticationsService();
     const InisightsService = new InsightsService();
+    const progressService = new ProgressService();
+    const journeyService = new JourneyService();
     const server = Hapi.server({
         port: process.env.PORT,
         host: process.env.HOST,
@@ -65,6 +71,20 @@ const init = async () => {
             plugin: inisight,
             options: {
                 service: InisightsService,
+                // validator: UserValidator
+            }
+        },
+        {
+            plugin: progress,
+            options: {
+                service: progressService,
+                // validator: UserValidator
+            }
+        },
+        {
+            plugin: journey,
+            options: {
+                service: journeyService,
                 // validator: UserValidator
             }
         },
