@@ -5,7 +5,12 @@ const InvariantError = require("../exception/InvariantError");
 
 class InsightService {
   constructor() {
-    this._pool = new Pool();
+    this._pool = new Pool({
+      ssl: { rejectUnauthorized: false },
+      connectionTimeoutMillis: 10000,
+      idleTimeoutMillis: 30000,
+      max: 20,
+    });
     this._modelCentroids = {}; // Tempat nyimpen "Otak" AI yang dipelajari dari JSON
 
     this._datasetPath = path.resolve(
