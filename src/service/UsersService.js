@@ -7,7 +7,12 @@ const bcrypt = require('bcrypt');
 
 class UsersService {
     constructor() {
-        this._pool = new Pool();
+        this._pool = new Pool({
+            ssl: { rejectUnauthorized: false },
+            connectionTimeoutMillis: 10000,
+            idleTimeoutMillis: 30000,
+            max: 20,
+        });
     }
 
     async getUserById(id) {
