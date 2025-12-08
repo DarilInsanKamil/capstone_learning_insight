@@ -7,6 +7,7 @@ import LearningTargetChart from "../components/LearningTargetChart";
 import LearningActivityTracker from "./LearningActivityTracker";
 import "../style/dashboard.css";
 import JourneyCard from "../components/JourneyCard";
+import client from "../api/axiosClient";
 
 const MENU_ITEMS = {
   INSIGHT: "Learning Insight",
@@ -25,127 +26,84 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchUserData();
-    fetchInsightData();
-    fetchJourneyData();
-    fetchProggresData();
+    const loadDashboardData = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([
+          fetchUserData(),
+          fetchInsightData(),
+          fetchJourneyData(),
+          fetchProggresData(),
+        ]);
+      } catch (error) {
+        console.error("Salah satu request gagal:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadDashboardData();
   }, []);
 
   const fetchProggresData = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/insight/progress`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-
-      if (response.ok) {
-        setProgress(data.data);
+      const response = await client.get("/insight/progress");
+      if (response.data.status === "success") {
+        setProgress(response.data.data);
       }
     } catch (err) {
       console.error("Error fetching progress:", err);
-    } finally {
-      setLoading(false);
     }
   };
 
   const fetchUserData = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
       const userId = localStorage.getItem("userId");
-
-      if (!token || !userId) {
-        window.location.href = "/login";
-        return;
-      }
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/users/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
+      if (!userId) return;
+      const response = await client.get(`/users/${userId}`);
+      if (response.data.status === "success") {
+        setUser(response.data.data.user);
+        if (response.data.data.user.image_path) {
+          setProfileImage(response.data.data.user.image_path);
         }
-      );
-
-      const data = await response.json();
-      if (response.ok) {
-        setUser(data.data.user);
       }
     } catch (err) {
       console.error("Error fetching user:", err);
     }
   };
 
-  // const handleGenerateInsight = async () => {
-  //   const token = localStorage.getItem("accessToken");
-
-  //   try {
-  //     setLoading(true);
-  //     const response = await fetch(
-  //       `${import.meta.env.VITE_API_URL}/insight/generate`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-  //     await fetchInsightData();
-  //   } catch (error) {
-  //     alert(
-  //       "Gagal generate insight: " +
-  //         (error.response?.data?.message || error.message)
-  //     );
-  //     setLoading(false);
-  //   }
-  // };
-
   const fetchInsightData = async () => {
     try {
-      const token = localStorage.getItem("accessToken");
-
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/insight/generate`,
-        {
-          // method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const data = await response.json();
-      if (response.ok) {
-        setInsight(data.data);
+      const response = await client.post("/insight/generate");
+      if (response.data.status === "success") {
+        setInsight(response.data.data);
       }
     } catch (err) {
-      console.error("Error fetching insight:", err);
-    } finally {
-      setLoading(false);
+      if (err.response && err.response.status === 429) {
+        console.log("Jatah harian habis, mengambil data insight terakhir...");
+
+        try {
+          const getResponse = await client.get("/insight/generate");
+
+          if (getResponse.data.status === "success") {
+            setInsight(getResponse.data.data);
+          }
+        } catch (getError) {
+          console.error("Gagal mengambil data insight lama:", getError);
+        }
+      } else {
+        console.error("Error fetching insight:", err);
+      }
     }
   };
 
   const fetchJourneyData = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/journey`);
-      const data = await response.json()
-      if (response.ok) {
-        setJourney(data.result);
+      const response = await client.get("/journey");
+      if (response.data.status === "success") {
+        setJourney(response.data.result);
       }
     } catch (err) {
-      console.err("err", err);
-    } finally {
-      setLoading(false);
+      console.error("Error fetching journey", err);
     }
   };
 
@@ -154,9 +112,11 @@ export default function Dashboard() {
 
 
   const renderMainContent = () => {
-    if (!insight) return <div>Loading insight data...</div>;
-
     if (activeMenu === MENU_ITEMS.INSIGHT) {
+      if (!insight || !progress) {
+        return <div>Loading dashboard data...</div>;
+      }
+
       return (
         <>
           <div className="top-row">
@@ -174,7 +134,7 @@ export default function Dashboard() {
 
               <div className="materials-number">
                 <span className="big-number">
-                  {progress.total_material_completed || 0}
+                  {progress?.total_material_completed || 0}
                 </span>
                 <span className="big-number-label">
                   Total Materials Completed
@@ -184,15 +144,15 @@ export default function Dashboard() {
               <ul className="materials-list">
                 <li>
                   <span>Materials / day:</span>
-                  <span>{progress.materials_per_day || 0}</span>
+                  <span>{progress?.materials_per_day || 0}</span>
                 </li>
                 <li>
                   <span>Avg tutorial duration (jam):</span>
-                  <span>{progress.avg_tutorial_duration || 0}</span>
+                  <span>{progress?.avg_tutorial_duration || 0}</span>
                 </li>
                 <li>
                   <span>Study time per material:</span>
-                  <span>{progress.study_time_per_material || 0}</span>
+                  <span>{progress?.study_time_per_material || 0}</span>
                 </li>
                 <li>
                   <span>Tutorial completion:</span>
@@ -201,13 +161,13 @@ export default function Dashboard() {
                       className="progress-bar tutorial"
                       style={{
                         width: `${
-                          (progress.tutorial_completion_rate || 0) * 100
+                          (progress?.tutorial_completion_rate || 0) * 100
                         }%`,
                       }}
                     />
                   </div>
                   <span>
-                    {((progress.tutorial_completion_rate || 0) * 100).toFixed(
+                    {((progress?.tutorial_completion_rate || 0) * 100).toFixed(
                       1
                     )}
                     %
@@ -220,19 +180,21 @@ export default function Dashboard() {
                       className="progress-bar submission"
                       style={{
                         width: `${
-                          (progress.submission_success_rate || 0) * 100
+                          (progress?.submission_success_rate || 0) * 100
                         }%`,
                       }}
                     />
                   </div>
                   <span>
-                    {((progress.submission_success_rate || 0) * 100).toFixed(1)}
+                    {((progress?.submission_success_rate || 0) * 100).toFixed(
+                      1
+                    )}
                     %
                   </span>
                 </li>
                 <li>
                   <span>Avg submission rating:</span>
-                  <span>{progress.avg_submission_rating || "N/A"}</span>
+                  <span>{progress?.avg_submission_rating || "N/A"}</span>
                 </li>
               </ul>
             </div>
@@ -254,6 +216,7 @@ export default function Dashboard() {
     }
 
     if (activeMenu === MENU_ITEMS.JOURNEY) {
+      if (!journey) return <div>Loading journey data...</div>;
       return (
         <div className="info-card">
           {/* <p>Konten untuk bagian Journey akan ditampilkan di sini.</p> */}
