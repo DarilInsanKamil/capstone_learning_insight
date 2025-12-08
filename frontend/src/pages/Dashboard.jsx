@@ -20,7 +20,7 @@ export default function Dashboard() {
   const [insight, setInsight] = useState(null);
   const [progress, setProgress] = useState(null);
   const [journey, setJourney] = useState(null);
-  const [profileImage, setProfileImage] = useState(null);
+
   const [activeMenu, setActiveMenu] = useState(MENU_ITEMS.INSIGHT);
   const [loading, setLoading] = useState(true);
 
@@ -78,9 +78,6 @@ export default function Dashboard() {
       const data = await response.json();
       if (response.ok) {
         setUser(data.data.user);
-        if (data.data.user.image_path) {
-          setProfileImage(data.data.user.image_path);
-        }
       }
     } catch (err) {
       console.error("Error fetching user:", err);
@@ -154,10 +151,7 @@ export default function Dashboard() {
 
 
 
-  function handlePhotoUpload(e) {
-    const file = e.target.files[0];
-    if (file) setProfileImage(URL.createObjectURL(file));
-  }
+
 
   const renderMainContent = () => {
     if (!insight) return <div>Loading insight data...</div>;
@@ -262,7 +256,6 @@ export default function Dashboard() {
     if (activeMenu === MENU_ITEMS.JOURNEY) {
       return (
         <div className="info-card">
-          <h3 className="section-title">🕒 Journey</h3>
           {/* <p>Konten untuk bagian Journey akan ditampilkan di sini.</p> */}
           <JourneyCard data={journey} />
         </div>
@@ -277,22 +270,10 @@ export default function Dashboard() {
     <div className="dashboard-wrapper">
       <aside className="sidebar">
         <div className="profile-upload-box">
-          <label htmlFor="uploadPhoto">
-            <img
-              src={
-                profileImage ||
-                "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-              }
-              alt="Profile"
-              className="sidebar-photo"
-            />
-          </label>
-          <input
-            id="uploadPhoto"
-            type="file"
-            accept="image/*"
-            onChange={handlePhotoUpload}
-            style={{ display: "none" }}
+          <img
+            src="/pfp.jpg"
+            alt="Profile"
+            className="sidebar-photo"
           />
         </div>
 
@@ -305,7 +286,7 @@ export default function Dashboard() {
             }`}
             onClick={() => setActiveMenu(MENU_ITEMS.INSIGHT)}
           >
-            📘 Learning Insight
+            Learning Insight
           </div>
           <div
             className={`menu-item ${
@@ -313,7 +294,7 @@ export default function Dashboard() {
             }`}
             onClick={() => setActiveMenu(MENU_ITEMS.TRACKER)}
           >
-            🗓 Learning Tracker
+            Learning Tracker
           </div>
           <div
             className={`menu-item ${
@@ -321,11 +302,16 @@ export default function Dashboard() {
             }`}
             onClick={() => setActiveMenu(MENU_ITEMS.JOURNEY)}
           >
-            🕒 Journey
+            Journey
           </div>
         </nav>
-        <div className="logout" onClick={logout}>
-          Log Out
+        <div className="logout menu-item" onClick={logout}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Log Out</span>
         </div>
       </aside>
 
