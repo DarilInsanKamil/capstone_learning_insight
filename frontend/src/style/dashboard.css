@@ -142,6 +142,8 @@ body {
   margin-bottom: 10px;
   cursor: pointer;
   transition: background 0.2s ease;
+  display:flex;
+  justify-content: center;
 }
 .menu-item:hover,
 .menu-item.active-menu {
@@ -151,10 +153,21 @@ body {
 .logout {
   margin-top: auto;
   width: 100%;
-  padding: 12px;
+  padding: 12px 15px;
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+}
+.logout svg {
+  width: 18px;
+  height: 18px;
+  stroke: white;
 }
 .logout:hover {
   background: rgba(255, 255, 255, 0.25);
