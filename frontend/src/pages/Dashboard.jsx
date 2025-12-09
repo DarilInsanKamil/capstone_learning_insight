@@ -280,6 +280,7 @@ export default function Dashboard() {
 
       <main className="main-content">
         <Header activeMenuTitle={activeMenu} />
+        {/* {JSON.stringify(journey)}; */}
         {renderMainContent()}
       </main>
     </div>

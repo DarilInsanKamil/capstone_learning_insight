@@ -2,7 +2,10 @@ const routes = (handler) => [
     {
         method: 'GET',
         path: '/journey',
-        handler: handler.getJourneyHandler
+        handler: handler.getJourneyHandler,
+        options: {
+            auth: 'learninginsight_jwt'
+        }
     }
 ]
 
