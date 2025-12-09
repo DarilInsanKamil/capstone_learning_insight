@@ -4,14 +4,12 @@ import RecommendationCard from "../components/RecommendationCard";
 import ProfileCard from "../components/ProfileCard";
 import Header from "../components/Header";
 import LearningTargetChart from "../components/LearningTargetChart";
-import LearningActivityTracker from "./LearningActivityTracker";
 import "../style/dashboard.css";
 import JourneyCard from "../components/JourneyCard";
 import client from "../api/axiosClient";
 
 const MENU_ITEMS = {
   INSIGHT: "Learning Insight",
-  TRACKER: "Learning Tracker",
   JOURNEY: "Journey",
 };
 
@@ -62,9 +60,9 @@ export default function Dashboard() {
       const response = await client.get(`/users/${userId}`);
       if (response.data.status === "success") {
         setUser(response.data.data.user);
-        if (response.data.data.user.image_path) {
-          setProfileImage(response.data.data.user.image_path);
-        }
+        // if (response.data.data.user.image_path) {
+        //   setProfileImage(response.data.data.user.image_path);
+        // }
       }
     } catch (err) {
       console.error("Error fetching user:", err);
@@ -106,10 +104,6 @@ export default function Dashboard() {
       console.error("Error fetching journey", err);
     }
   };
-
-
-
-
 
   const renderMainContent = () => {
     if (activeMenu === MENU_ITEMS.INSIGHT) {
@@ -207,19 +201,10 @@ export default function Dashboard() {
       );
     }
 
-    if (activeMenu === MENU_ITEMS.TRACKER) {
-      return (
-        <div className="full-width-tracker">
-          <LearningActivityTracker />
-        </div>
-      );
-    }
-
     if (activeMenu === MENU_ITEMS.JOURNEY) {
       if (!journey) return <div>Loading journey data...</div>;
       return (
         <div className="info-card">
-          {/* <p>Konten untuk bagian Journey akan ditampilkan di sini.</p> */}
           <JourneyCard data={journey} />
         </div>
       );
@@ -253,14 +238,6 @@ export default function Dashboard() {
           </div>
           <div
             className={`menu-item ${
-              activeMenu === MENU_ITEMS.TRACKER ? "active-menu" : ""
-            }`}
-            onClick={() => setActiveMenu(MENU_ITEMS.TRACKER)}
-          >
-            Learning Tracker
-          </div>
-          <div
-            className={`menu-item ${
               activeMenu === MENU_ITEMS.JOURNEY ? "active-menu" : ""
             }`}
             onClick={() => setActiveMenu(MENU_ITEMS.JOURNEY)}
@@ -280,7 +257,6 @@ export default function Dashboard() {
 
       <main className="main-content">
         <Header activeMenuTitle={activeMenu} />
-        {/* {JSON.stringify(journey)}; */}
         {renderMainContent()}
       </main>
     </div>
