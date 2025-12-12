@@ -97,7 +97,23 @@ const init = async () => {
                 validator: AuthenticationsValidator,
             },
         },
-    ])
+    ]);
+    
+    server.route({
+        method: 'GET',
+        path: '/',
+        handler: () => ({
+            status: 'success',
+            message: 'Backend is running'
+        })
+    });
+    
+    server.route({
+        method: 'GET',
+        path: '/health',
+        handler: (request, h) => h.response('OK').code(200),
+    });
+
 
     await server.start();
     console.log(`Server berjalan pada ${server.info.uri}`)
