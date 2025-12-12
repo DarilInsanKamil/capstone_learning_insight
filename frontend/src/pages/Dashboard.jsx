@@ -4,14 +4,13 @@ import RecommendationCard from "../components/RecommendationCard";
 import ProfileCard from "../components/ProfileCard";
 import Header from "../components/Header";
 import LearningTargetChart from "../components/LearningTargetChart";
-import LearningActivityTracker from "./LearningActivityTracker";
+
 import "../style/dashboard.css";
 import JourneyCard from "../components/JourneyCard";
 import client from "../api/axiosClient";
 
 const MENU_ITEMS = {
   INSIGHT: "Learning Insight",
-  TRACKER: "Learning Tracker",
   JOURNEY: "Journey",
 };
 
@@ -62,9 +61,6 @@ export default function Dashboard() {
       const response = await client.get(`/users/${userId}`);
       if (response.data.status === "success") {
         setUser(response.data.data.user);
-        if (response.data.data.user.image_path) {
-          setProfileImage(response.data.data.user.image_path);
-        }
       }
     } catch (err) {
       console.error("Error fetching user:", err);
@@ -207,14 +203,6 @@ export default function Dashboard() {
       );
     }
 
-    if (activeMenu === MENU_ITEMS.TRACKER) {
-      return (
-        <div className="full-width-tracker">
-          <LearningActivityTracker />
-        </div>
-      );
-    }
-
     if (activeMenu === MENU_ITEMS.JOURNEY) {
       if (!journey) return <div>Loading journey data...</div>;
       return (
@@ -250,14 +238,6 @@ export default function Dashboard() {
             onClick={() => setActiveMenu(MENU_ITEMS.INSIGHT)}
           >
             Learning Insight
-          </div>
-          <div
-            className={`menu-item ${
-              activeMenu === MENU_ITEMS.TRACKER ? "active-menu" : ""
-            }`}
-            onClick={() => setActiveMenu(MENU_ITEMS.TRACKER)}
-          >
-            Learning Tracker
           </div>
           <div
             className={`menu-item ${
