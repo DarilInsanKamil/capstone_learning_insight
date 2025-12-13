@@ -4,10 +4,9 @@ const InvariantError = require('../exception/InvariantError');
 class AuthenticationsService {
     constructor() {
         this._pool = new Pool({
+            connectionString: process.env.SUPABASE_DB_URL,
             ssl: { rejectUnauthorized: false },
-            connectionTimeoutMillis: 10000,
-            idleTimeoutMillis: 30000,
-            max: 20,
+            family: 4,
         });
     }
 
