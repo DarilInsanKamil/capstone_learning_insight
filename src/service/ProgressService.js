@@ -2,7 +2,11 @@ const { Pool } = require("pg")
 
 class ProgressService {
   constructor() {
-    this._pool = new Pool()
+    this._pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },
+        family: 4,
+    });
   }
 
   async getUserProgress(userId) {
