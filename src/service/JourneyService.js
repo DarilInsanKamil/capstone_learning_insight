@@ -3,7 +3,11 @@ const InvariantError = require("../exception/InvariantError");
 
 class JourneyService {
     constructor() {
-        this._pool = new Pool();
+        this._pool = new Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: { rejectUnauthorized: false },
+            family: 4,
+        });
     }
 
     async getJourneys(userId) {
